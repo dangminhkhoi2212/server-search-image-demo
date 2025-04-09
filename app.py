@@ -146,6 +146,9 @@ def process_images_folder():
 
 
 # process_images_folder()
+@app.route("/", methods=["GET"])
+def hello():
+    return jsonify({"message": "Hello, World!"})
 
 
 @app.route("/process-images", methods=["POST"])
