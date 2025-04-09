@@ -1,0 +1,7 @@
+tensorflow
+pillow
+flask
+flask_cors
+numpy
+qdrant-client
+cloudinary
