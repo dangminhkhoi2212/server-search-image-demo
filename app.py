@@ -145,7 +145,7 @@ def process_images_folder():
                         f"Error inserting image '{image_file}' into Qdrant: {e}")
 
 
-process_images_folder()
+# process_images_folder()
 
 
 @app.route("/process-images", methods=["POST"])
