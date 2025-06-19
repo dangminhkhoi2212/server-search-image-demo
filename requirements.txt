@@ -5,3 +5,4 @@ flask_cors
 numpy
 qdrant-client
 cloudinary
+load_dotenv

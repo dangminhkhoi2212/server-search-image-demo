@@ -1,10 +1,17 @@
 import logging
 import cloudinary
 import cloudinary.uploader
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+CLOUDINARY_NAME = os.getenv('CLOUDINARY_NAME')
+CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY')
+CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
 cloudinary.config(
-    cloud_name='dakwyskfm',
-    api_key="253915897887594",
-    api_secret="6cuhDK6jLdGK_vALQ6wY38zv3yA"
+    cloud_name=CLOUDINARY_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET
 )
 
 

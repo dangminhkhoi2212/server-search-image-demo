@@ -17,13 +17,20 @@ from flask_cors import CORS
 import io
 import requests
 # Initialize CORS
-
+from dotenv import load_dotenv
+load_dotenv()
 # Disable oneDNN optimizations
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
+QD_URL = os.getenv('QD_URL')
+QD_API_KEY = os.getenv('QD_API_KEY')
+qdrant_client = QdrantClient(
+    url=QD_URL,
+    api_key=QD_API_KEY,
+)
 
 
 def qdrant_request_with_retries(func, *args, retries=3, backoff_multiplier=2, **kwargs):
@@ -44,11 +51,6 @@ def qdrant_request_with_retries(func, *args, retries=3, backoff_multiplier=2, **
 
 
 # Initialize Qdrant client
-qdrant_client = QdrantClient(
-    url="https://f46fd696-7a66-49eb-9c0e-fdf0e3426942.europe-west3-0.gcp.cloud.qdrant.io:6333",
-    api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwiZXhwIjoxOTE2MTMxMzM2fQ.pe7nAz1bxGnQIrBsevDslsMCFmcssGY0HaKr6mhlOFw",
-    timeout=60.0,  # Set timeout to 60 seconds
-)
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -174,51 +176,10 @@ def image_to_base64(image_path):
         logging.error(f"Error converting image to Base64: {e}")
         return None
 
-
-# def process_images_folder():
-#     """Clean Qdrant and process images in the './images' folder."""
-#     image_folder = "./images2"
-#     if not os.path.exists(image_folder):
-#         logging.error(f"Error: Folder '{image_folder}' does not exist.")
-#         return
-#     if not os.listdir(image_folder):
-#         logging.warning(f"Warning: Folder '{image_folder}' is empty.")
-#         return
-
-#     clean_qdrant_collection()  # Clean the collection before processing
-#     for idx, image_file in enumerate(os.listdir(image_folder)):
-#         image_path = os.path.join(image_folder, image_file)
-#         if os.path.isfile(image_path):
-#             # Upload image to Cloudinary
-#             image_url = upload_to_cloudinary(image_path)
-#             if not image_url:
-#                 logging.error(f"Failed to upload {image_file} to Cloudinary.")
-#                 continue
-
-#             # Extract features
-#             vector = extract_features(image_path)
-#             if vector is not None:  # Only upsert if feature extraction was successful
-#                 try:
-#                     qdrant_request_with_retries(
-#                         qdrant_client.upsert,
-#                         collection_name=collection_name,
-#                         points=[{
-#                             "id": idx,
-#                             "vector": vector,
-#                             "payload": {
-#                                 "filename": image_file,
-#                                 "image_url": image_url
-#                             }
-#                         }],
-#                     )
-#                     logging.info(
-#                         f"Inserted image '{image_file}' into Qdrant with URL: {image_url}")
-#                 except Exception as e:
-#                     logging.error(
-#                         f"Error inserting image '{image_file}' into Qdrant: {e}")
-
-
+##############################################
+# chạy cái này dễ quan sát trong terminal
 # process_images_folder()
+##############################################
 
 
 @app.route("/", methods=["GET"])
